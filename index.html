@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#1a1a1a">
+<title>白光咖啡 風味校正 合作夥伴版</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;background:#F2F0EB;min-height:100vh;padding:0 0 40px}
+.app{max-width:420px;margin:0 auto;background:#F2F0EB;min-height:100vh}
+
+/* top bar */
+.topbar{background:#1a1a1a;padding:52px 18px 14px;color:#fff;position:sticky;top:0;z-index:100}
+.topbar-title{font-size:16px;font-weight:600}
+.topbar-sub{font-size:11px;color:#888;margin-top:3px}
+
+/* card sections */
+.card{background:#fff;border-radius:16px;margin:12px 12px 0;overflow:hidden;border:1px solid #EBE8E2}
+.card-head{padding:14px 16px 10px;border-bottom:1px solid #F0EDE8}
+.card-title{font-size:13px;font-weight:600;color:#1a1a1a}
+.card-sub{font-size:11px;color:#AAA;margin-top:2px}
+.card-body{padding:14px 16px}
+
+/* labels */
+.sec-label{font-size:10px;font-weight:700;color:#AAA;letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+
+/* fields */
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:600;color:#555}
+.field input{font-size:14px;border:1px solid #DDD;border-radius:10px;padding:10px 12px;background:#fff;color:#1a1a1a;width:100%}
+.field input:focus{outline:none;border-color:#1a1a1a}
+.field input::placeholder{color:#CCC}
+.field input[readonly]{background:#F8F6F3;color:#888;border-color:#EEE}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+
+
+/* tags */
+.tag-grid{display:flex;flex-wrap:wrap;gap:7px}
+.tag{font-size:12px;padding:7px 12px;border-radius:20px;border:1.5px solid #E0DDD8;color:#666;cursor:pointer;transition:all .15s;user-select:none;background:#fff}
+.tag.sel-hi{border-color:#D4A017;background:#FFF9E6;color:#7A5A00;font-weight:500}
+.tag.sel-med{border-color:#C0456E;background:#FDF0F5;color:#7B1840;font-weight:500}
+.tag.sel-lo{border-color:#7A4030;background:#F5EDEA;color:#5A2E1A;font-weight:500}
+.tag.sel-crit{border-color:#C0392B;background:#FDECEA;color:#922B21;font-weight:500}
+
+/* flavor bars */
+.flavor-bar{display:flex;height:32px;border-radius:10px;overflow:hidden;margin-bottom:8px}
+.fb-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;transition:flex .3s;overflow:hidden;white-space:nowrap}
+.fb-rest{background:#F2F0EB;flex:10;display:flex;align-items:center;justify-content:center;font-size:10px;color:#AAA}
+.target-bar{display:flex;height:5px;border-radius:3px;overflow:hidden;margin-bottom:4px;opacity:.35}
+.range-hint{display:flex;justify-content:space-between;font-size:10px;color:#AAA;margin-bottom:14px}
+
+/* sliders */
+.slider-block{margin-bottom:14px}
+.slider-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.slider-name{font-size:13px;font-weight:500;color:#1a1a1a}
+.slider-val{font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px}
+.badge{font-size:10px;padding:2px 6px;border-radius:5px}
+.badge.ok{background:#EAF5E0;color:#2E6B10}
+.badge.ng{background:#FDECEA;color:#A32020}
+input[type=range]{width:100%;height:32px;cursor:pointer;accent-color:#1a1a1a}
+
+/* result */
+.result-box{padding:14px 16px;border-radius:0}
+.result-box.good{background:#EAF5E0}.result-box.warn{background:#FFF8E0}.result-box.bad{background:#FDECEA}.result-box.crit{background:#1C0F0A}
+.result-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.result-box.good .result-title{color:#2E6B10}.result-box.warn .result-title{color:#7A5500}
+.result-box.bad .result-title{color:#A32020}.result-box.crit .result-title{color:#F5C095}
+.result-body{font-size:12px;line-height:1.65}
+.result-box.good .result-body{color:#3A7A18}.result-box.warn .result-body{color:#8A6000}
+.result-box.bad .result-body{color:#B83030}.result-box.crit .result-body{color:#E8A070}
+
+/* steps */
+.step-row{display:flex;gap:11px;margin-bottom:11px;align-items:flex-start}
+.step-row:last-child{margin-bottom:0}
+.step-num{width:24px;height:24px;border-radius:50%;background:#1a1a1a;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-title{font-size:12px;font-weight:600;color:#1a1a1a;margin-bottom:2px}
+.step-desc{font-size:12px;color:#888;line-height:1.5}
+.step-desc.act{color:#0C447C;font-weight:600}
+.step-desc.act-w{color:#A35000;font-weight:600}
+.step-desc.crit{color:#C0392B;font-weight:600}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="topbar">
+  <div class="topbar-title">白光咖啡 風味校正 合作夥伴版</div>
+  <div class="topbar-sub">Espresso 沖煮建議</div>
+</div>
+
+
+<!-- Brew Params -->
+<div class="card">
+  <div class="card-head"><div class="card-title">調煮參數</div></div>
+  <div class="card-body">
+    <div class="grid3" style="margin-bottom:10px">
+      <div class="field"><label>水溫 (℃)</label><input id="ll-wtemp" type="number" inputmode="decimal" step="any" placeholder="93"></div>
+      <div class="field"><label>粉量 (g)</label><input id="ll-dose" type="number" inputmode="decimal" step="any" placeholder="16" oninput="calcRatio()"></div>
+      <div class="field">
+        <label>萃取秒數 (s)</label>
+        <input id="ll-time" type="number" inputmode="decimal" step="any" placeholder="25–30" oninput="checkTime()">
+        <div id="time-badge" style="display:none;font-size:12px;font-weight:600;padding:6px 10px;border-radius:8px;margin-top:4px"></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>咖啡液重 (g)</label><input id="ll-yield" type="number" inputmode="decimal" step="any" placeholder="30" oninput="calcRatio()"></div>
+      <div class="field"><label>Espresso 比例</label><input id="ll-ratio" type="text" readonly placeholder="自動"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Tags -->
+<div class="card">
+  <div class="card-head"><div class="card-title">今天喝起來像什麼？</div></div>
+  <div class="card-body">
+    <div class="tag-grid" id="tags-l">
+      <span class="tag" data-k="bright"     data-t="hi"   onclick="tog(this)">明亮水果酸</span>
+      <span class="tag" data-k="sharp"      data-t="crit" onclick="tog(this)">尖酸刺激</span>
+      <span class="tag" data-k="astringent" data-t="crit" onclick="tog(this)">收斂感</span>
+      <span class="tag" data-k="berry"      data-t="med"  onclick="tog(this)">水果甜感</span>
+      <span class="tag" data-k="flatSw"     data-t="lo"   onclick="tog(this)">甜感不足</span>
+      <span class="tag" data-k="bitter"     data-t="lo"   onclick="tog(this)">苦感明顯</span>
+      <span class="tag" data-k="choc"       data-t="lo"   onclick="tog(this)">巧克力過重</span>
+      <span class="tag" data-k="peanut"     data-t="crit" onclick="tog(this)">花生/穀物味</span>
+      <span class="tag" data-k="grass"      data-t="crit" onclick="tog(this)">青草味</span>
+      <span class="tag" data-k="thin"       data-t="lo"   onclick="tog(this)">水感/空洞</span>
+    </div>
+  </div>
+</div>
+
+<!-- Sliders -->
+<div class="card">
+  <div class="card-head"><div class="card-title">感受比例</div><div class="card-sub">目標：酸 10–20%　甜 60–70%　深調 5–10%</div></div>
+  <div class="card-body">
+    <div class="flavor-bar">
+      <div class="fb-seg" id="fba-l" style="flex:22;background:#F5C542;color:#7A5A00">酸 22%</div>
+      <div class="fb-seg" id="fbs-l" style="flex:65;background:#D4537E;color:#5B0F2E">甜 65%</div>
+      <div class="fb-seg" id="fbd-l" style="flex:4;background:#6B3A2A;color:#E8D0C4">深 4%</div>
+      <div class="fb-rest">餘韻</div>
+    </div>
+    <div class="target-bar">
+      <div style="background:#F5C542;flex:25"></div>
+      <div style="background:#D4537E;flex:65"></div>
+      <div style="background:#6B3A2A;flex:5"></div>
+      <div style="background:#DDD;flex:5"></div>
+    </div>
+    <div class="range-hint"><span>目標比例 ↑</span><span>酸 10–20%　甜 60–70%　深調 5–10%</span></div>
+    <div class="slider-block">
+      <div class="slider-head">
+        <span class="slider-name" style="color:#8A6200">酸值感</span>
+        <span class="slider-val"><span id="va-l" style="color:#8A6200">22%</span><span class="badge ok" id="ra-l">目標</span></span>
+      </div>
+      <input type="range" min="0" max="50" value="22" step="1" id="sa-l" oninput="upd()">
+    </div>
+    <div class="slider-block">
+      <div class="slider-head">
+        <span class="slider-name" style="color:#9B1A50">甜感</span>
+        <span class="slider-val"><span id="vs-l" style="color:#9B1A50">65%</span><span class="badge ok" id="rs-l">目標</span></span>
+      </div>
+      <input type="range" min="0" max="100" value="65" step="1" id="ss-l" oninput="upd()">
+    </div>
+    <div class="slider-block" style="margin-bottom:0">
+      <div class="slider-head">
+        <span class="slider-name" style="color:#5A2E1A">深褐/巧克力調</span>
+        <span class="slider-val"><span id="vd-l" style="color:#5A2E1A">4%</span><span class="badge ok" id="rd-l">目標</span></span>
+      </div>
+      <input type="range" min="0" max="25" value="4" step="1" id="sd-l" oninput="upd()">
+    </div>
+  </div>
+</div>
+
+<!-- Result -->
+<div style="margin:12px 12px 24px;border-radius:16px;overflow:hidden;border:1px solid #EBE8E2">
+  <div id="rbox-l" class="result-box good">
+    <div class="result-title" id="rt-l">均衡 — 符合目標</div>
+    <div class="result-body" id="rb-l">酸值明亮多汁（20–30%）、甜感主導（60–70%）、巧克力調收斂（&lt;5%）。</div>
+  </div>
+  <div style="padding:14px 16px;border-top:1px solid #F0EDE8;background:#fff">
+    <div class="sec-label" style="margin-bottom:6px">調整方向</div>
+    <div style="font-size:11px;color:#A35000;font-weight:600;background:#FFF3E0;border:1px solid #F0C880;border-radius:8px;padding:6px 10px;margin-bottom:12px">⚠️ 一次調整一個變因，逐步確認後再繼續</div>
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div><div class="step-title">研磨方向</div><div class="step-desc" id="s1-l">維持目前刻度</div></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div><div class="step-title">水溫方向</div><div class="step-desc" id="s2-l">維持今日水溫</div></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div><div class="step-title">咖啡液重</div><div class="step-desc" id="s3-l">維持目前液重</div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ── State ──────────────────────────────────────────────────────────
+const selTags = new Set();
+// ── Extraction time check ─────────────────────────────────────────
+function checkTime() {
+  const val = parseFloat(document.getElementById('ll-time').value);
+  const badge = document.getElementById('time-badge');
+  if (isNaN(val)) { badge.style.display = 'none'; return; }
+
+  let msg = '', bg = '', color = '', border = '';
+  if (val < 22) {
+    msg = '⚡ 流速異常偏快 — 確認研磨'; bg = '#FDECEA'; color = '#A32020'; border = '#F0C0C0';
+  } else if (val < 25) {
+    msg = '▲ 流速偏快 — 確認研磨';      bg = '#FFF3E0'; color = '#A35000'; border = '#F0C880';
+  } else if (val <= 30) {
+    badge.style.display = 'none'; return;
+  } else if (val <= 35) {
+    msg = '▼ 流速偏慢 — 正常範圍內';    bg = '#FFF8E0'; color = '#7A5500'; border = '#E8D890';
+  } else {
+    msg = '🐢 流速異常偏慢 — 確認研磨'; bg = '#FDECEA'; color = '#A32020'; border = '#F0C0C0';
+  }
+  badge.style.cssText = `display:block;font-size:12px;font-weight:600;padding:6px 10px;border-radius:8px;margin-top:4px;background:${bg};color:${color};border:1px solid ${border}`;
+  badge.textContent = msg;
+}
+
+
+function calcRatio() {
+  const dose = parseFloat(document.getElementById('ll-dose').value);
+  const yld  = parseFloat(document.getElementById('ll-yield').value);
+  const el   = document.getElementById('ll-ratio');
+  el.value = (dose > 0 && yld > 0) ? '1 : ' + (yld / dose).toFixed(2) : '';
+}
+
+// ── Tags ──────────────────────────────────────────────────────────
+function tog(el) {
+  const k = el.dataset.k;
+  if (selTags.has(k)) { selTags.delete(k); el.className = 'tag'; }
+  else                { selTags.add(k);    el.className = 'tag sel-' + el.dataset.t; }
+  upd();
+}
+
+// ── Badge helper ──────────────────────────────────────────────────
+function setBadge(id, ok) {
+  const el = document.getElementById(id);
+  el.className = 'badge ' + (ok ? 'ok' : 'ng');
+  el.textContent = ok ? '目標' : '範圍外';
+}
+
+// ── Steps helper ──────────────────────────────────────────────────
+function setSteps(a, b, c, ca, cb, cc) {
+  [['s1-l', a, ca], ['s2-l', b, cb], ['s3-l', c, cc]].forEach(([id, txt, cls]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = txt;
+    el.className = 'step-desc' + (cls ? ' ' + cls : '');
+  });
+}
+
+// ── Main diagnosis ────────────────────────────────────────────────
+function upd() {
+  const acid  = +document.getElementById('sa-l').value;
+  const sweet = +document.getElementById('ss-l').value;
+  const dark  = +document.getElementById('sd-l').value;
+
+  // Update value displays
+  document.getElementById('va-l').textContent = acid  + '%';
+  document.getElementById('vs-l').textContent = sweet + '%';
+  document.getElementById('vd-l').textContent = dark  + '%';
+
+  // Badges
+  setBadge('ra-l', acid  >= 10 && acid  <= 20);
+  setBadge('rs-l', sweet >= 60 && sweet <= 70);
+  setBadge('rd-l', dark  >=  5 && dark  <= 10);
+
+  // Flavor bar
+  const fa = document.getElementById('fba-l');
+  const fs = document.getElementById('fbs-l');
+  const fd = document.getElementById('fbd-l');
+  fa.style.flex = acid;           fa.textContent = acid  > 8  ? `酸 ${acid}%`  : '';
+  fs.style.flex = sweet;          fs.textContent = sweet > 12 ? `甜 ${sweet}%` : '';
+  fd.style.flex = Math.max(dark,1); fd.textContent = dark >= 5 ? `深 ${dark}%` : '';
+
+  const rb  = document.getElementById('rbox-l');
+  const rt  = document.getElementById('rt-l');
+  const rbd = document.getElementById('rb-l');
+
+  const hasPeanut    = selTags.has('peanut');
+  const hasGrass     = selTags.has('grass');
+  const hasSharp     = selTags.has('sharp');
+  const hasAstringent= selTags.has('astringent');
+  const hasBitter    = selTags.has('bitter') || selTags.has('choc');
+  const hasThin      = selTags.has('thin');
+  const hasFlatSw    = selTags.has('flatSw');
+
+  if (hasPeanut || hasGrass) {
+    rb.className = 'result-box crit';
+    rt.textContent = '嚴重萃取不足';
+    rbd.textContent = (hasPeanut ? '花生/穀物味 = 生豆感，萃取極度不足。' : '') +
+                      (hasGrass  ? '青草味 = 揮發物殘留，萃取嚴重不足。'  : '') +
+                      ' 大幅調整後重新萃取再評估。';
+    setSteps('研磨往細的方向大幅調整', '水溫往升的方向確認', '維持目前液重', 'crit', 'crit', '');
+
+  } else if (hasAstringent) {
+    rb.className = 'result-box bad';
+    rt.textContent = '收斂感 — 粉餅結構或萃取不均';
+    rbd.textContent = '收斂感通常是粉餅結構問題（布粉不均 / 通道效應）或流速過快萃取不均。';
+    setSteps('研磨往細的方向調整，確認布粉均勻度', '水溫往升的方向輔助', '咖啡液往增加方向微調', 'act', 'act-w', '');
+
+  } else if (hasSharp) {
+    rb.className = 'result-box bad';
+    rt.textContent = '酸質不對 — 尖酸';
+    rbd.textContent = '尖酸 = 萃取率不足，甜感沒有充分溶出來支撐酸值。';
+    setSteps('研磨往細的方向調整', '水溫往升的方向輔助', '維持目前液重', 'act', 'act-w', '');
+
+  } else if (dark > 10 || hasBitter) {
+    rb.className = 'result-box bad';
+    rt.textContent = '過萃 — 深調/苦感超標';
+    rbd.textContent = '巧克力調超過 10%，萃取過度，苦感偏重。';
+    setSteps('研磨往粗的方向調整', '水溫往降的方向輔助', '咖啡液往減少方向截斷後段苦味', 'act', 'act-w', 'act-w');
+
+  } else if (acid < 10 || hasThin) {
+    rb.className = 'result-box warn';
+    rt.textContent = '萃取不足 — 水感/甜感偏低';
+    rbd.textContent = '酸值低於 10% 或有水感，甜感沒有充分溶出。';
+    setSteps('研磨往細的方向調整', '水溫往升的方向輔助', '咖啡液往減少方向提高濃度感', 'act', 'act-w', '');
+
+  } else if (acid > 20) {
+    rb.className = 'result-box warn';
+    rt.textContent = '酸值偏高 — 甜感被壓過';
+    rbd.textContent = '酸值超過 20%，甜感比例不足，需要提升萃取讓甜感更明顯。';
+    setSteps('研磨往細的方向調整', '水溫往升的方向輔助', '維持目前液重', 'act', 'act-w', '');
+
+  } else if (hasFlatSw || sweet < 60) {
+    rb.className = 'result-box warn';
+    rt.textContent = '甜感不足 — 低於 60%';
+    rbd.textContent = '甜感比例偏低，確認今日批次 Agtron 是否偏移。增粉為最後手段。';
+    setSteps('研磨往細的方向微調', '確認水溫是否一致', '維持目前液重，增粉為最後手段', 'act', '', '');
+
+  } else {
+    rb.className = 'result-box good';
+    rt.textContent = '均衡 — 符合目標';
+    rbd.textContent = '酸值明亮多汁（10–20%）、甜感主導（60–70%）、巧克力調平衡（5–10%）。';
+    setSteps('維持目前刻度', '維持今日水溫', '維持目前液重', '', '', '');
+  }
+}
+</script>
+</body>
+</html>
